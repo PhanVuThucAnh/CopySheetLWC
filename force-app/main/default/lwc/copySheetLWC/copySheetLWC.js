@@ -1,17 +1,14 @@
 import { LightningElement, api, wire, track } from "lwc";
 
-import getCycleDetail from "@salesforce/apex/CopySheetLWCCtrl.getCycleDetail";
+//import getCycleDetail from "@salesforce/apex/CopySheetLWCCtrl.getCycleDetail";
 import copyCycle from "@salesforce/apex/CopySheetLWCCtrl.copyCycle";
 
-// import CYCLE_OBJECT from "@salesforce/schema/Cycle__c";
 import Name_FIELD from "@salesforce/schema/Cycle__c.Name";
 import Contactc_FIELD from "@salesforce/schema/Cycle__c.Contact__c";
 import Statusc_FIELD from "@salesforce/schema/Cycle__c.Status__c";
 
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
-
-//import { getPicklistValues } from 'lightning/uiObjectInfoApi';
-//import { getRecord } from "lightning/uiRecordApi";
+import { getRecord } from "lightning/uiRecordApi";
 
 const wireFIELDS = [Name_FIELD, Contactc_FIELD, Statusc_FIELD];
 
@@ -19,27 +16,34 @@ export default class CopySheetLWC extends LightningElement {
   lwcstart = false;
 
   @api recordId;
+  @track data;
+  @track error;
 
   objectApiName = "Cycle__c";
 
-  @wire(getCycleDetail, { Id: "$recordId", fields: wireFIELDS }) cycledetail;
-
-  // @wire(getRecord, { recordId: "$recordId", fields: wireFIELDS }) currentCycle;
-  // @api currentCycle1;
-
-  // get name() {
-  //   return this.currentCycle.data.fields.Name.value;
+  // @wire(getCycleDetail, { Id: "$recordId" })
+  // cycledetail({ error, data }) {
+  //   if (data) {
+  //     this.data = data;
+  //   }
   // }
 
-  // get contactInfo() {
-  //   return this.currentCycle.data.fields.Contact__c.value;
-  // }
+  @wire(getRecord, { recordId: "$recordId", fields: wireFIELDS }) currentCycle;
+  @api copyCurrentCycle;
 
-  // get cycleStatus() {
-  //   return this.currentCycle.data.fields.Status__c.value;
-  // }
+  get name() {
+    return this.currentCycle.data.fields.Name.value;
+  }
 
-  // @track fields = [Name_FIELD, Contactc_FIELD, Statusc_FIELD];
+  get contactInfo() {
+    return this.currentCycle.data.fields.Contact__c.value;
+  }
+
+  get cycleStatus() {
+    return this.currentCycle.data.fields.Status__c.value;
+  }
+
+  @track fields = [Name_FIELD, Contactc_FIELD, Statusc_FIELD];
 
   handleLWCStart() {
     this.lwcstart = true;
@@ -49,15 +53,15 @@ export default class CopySheetLWC extends LightningElement {
     if (this.cycleStatus !== "支援終了") {
       const copyDetail = {
         apiName: this.objectApiName,
-        Name: this.cycledetail.Name + "Copy",
-        Contact__c: this.cycledetail.Contact__c,
+        Name: this.name + "Copy",
+        Contact__c: this.contactInfo,
         SegmentA__c: true,
         ShienExID__c: "xxxxxxxxxCopy"
       };
 
       console.log(">>>>>>SHOW DETAIL<<<<<<<", copyDetail);
 
-      copyCycle({ currentCycle1: copyDetail })
+      copyCycle({ copyCurrentCycle: copyDetail })
         .then(() => {
           this.dispatchEvent(
             new ShowToastEvent({

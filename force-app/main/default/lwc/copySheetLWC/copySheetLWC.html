@@ -27,21 +27,13 @@
       ></lightning-button>
     </div>
 
-    <div if:true={cycledetail.data}></div>
-      <lightning-record-form record-id={recordId} object-api-name={objectApiName}>
-        <div class="slds-col slds-size_1-of-2">
-          <lightning-output-field 
-          value={cycledetail.Name}
-          ></lightning-output-field>
-          <lightning-output-field 
-          value={cycleDetail.Contact__c}
-          ></lightning-output-field>
-          <lightning-output-field
-          value={cycleDetail.Status__c}
-          ></lightning-output-field>
-        </div>
-      </lightning-record-form>
-    </div>
-    
+    <lightning-record-form
+      record-id={recordId}
+      object-api-name={objectApiName}
+      fields={fields}
+      columns="2"
+      mode="view"
+    >
+    </lightning-record-form>
   </template>
 </template>

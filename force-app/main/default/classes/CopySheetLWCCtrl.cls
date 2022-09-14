@@ -1,27 +1,27 @@
 public with sharing class CopySheetLWCCtrl {
-    @AuraEnabled(cacheable=true)
-    public static List<Cycle__c> getCycleDetail(ID recordID){
-        try {
-            List<Cycle__c> cycleDetailList = [
-                SELECT
-                 Name,
-                 Contact__c,
-                 Status__c
-                FROM Cycle__c
-                WHERE ID = :recordID
-            ];
-            return cycleDetailList;
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
-    }
+    // @AuraEnabled(cacheable=true)
+    // public static List<Cycle__c> getCycleDetail(ID recordID){
+    //     try {
+    //         List<Cycle__c> cycleDetailList = [
+    //             SELECT
+    //              Name,
+    //              Contact__c,
+    //              Status__c
+    //             FROM Cycle__c
+    //             WHERE ID = :recordID
+    //         ];
+    //         return cycleDetailList;
+    //     } catch (Exception e) {
+    //         throw new AuraHandledException(e.getMessage());
+    //     }
+    // }
     
     @AuraEnabled
-    public static Cycle__c copyCycle(Cycle__c currentCycle){
+    public static Cycle__c copyCycle(Cycle__c copyCurrentCycle){
         try {
-            currentCycle.StartDateA__c=system.Today();
-            insert(currentCycle);
-            return currentCycle;
+            copyCurrentCycle.StartDateA__c=system.Today();
+            insert(copyCurrentCycle);
+            return copyCurrentCycle;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
