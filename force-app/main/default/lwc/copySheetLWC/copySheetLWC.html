@@ -1,0 +1,47 @@
+<template>
+  <div if:false={lwcstart}>
+    <lightning-button
+      variant="brand-outline"
+      type="Submit"
+      label="受付シートのコピー"
+      onclick={handleLWCStart}
+    ></lightning-button>
+  </div>
+
+  <template if:true={lwcstart}>
+    <div class="slds-text-heading_medium">受付シートのコピー</div>
+
+    <div class="slds-col slds-size_1-of-2">
+      <lightning-button
+        variant="brand-outline"
+        type="Submit"
+        label="受付シートのコピー"
+        onclick={handleSuccess}
+      ></lightning-button>
+
+      <lightning-button
+        variant="brand-outline"
+        type="Cancel"
+        label="キャンセル"
+        onclick={handleCancel}
+      ></lightning-button>
+    </div>
+
+    <div if:true={cycledetail.data}></div>
+      <lightning-record-form record-id={recordId} object-api-name={objectApiName}>
+        <div class="slds-col slds-size_1-of-2">
+          <lightning-output-field 
+          value={cycledetail.Name}
+          ></lightning-output-field>
+          <lightning-output-field 
+          value={cycleDetail.Contact__c}
+          ></lightning-output-field>
+          <lightning-output-field
+          value={cycleDetail.Status__c}
+          ></lightning-output-field>
+        </div>
+      </lightning-record-form>
+    </div>
+    
+  </template>
+</template>
